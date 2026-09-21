@@ -11,14 +11,22 @@ import BirthdayNumber from "@/components/birthday/BirthdayNumber";
 import Rsvp from "@/components/rsvp/Rsvp";
 import Farewell from "@/components/footer/Farewell";
 import SoundToggle from "@/components/ui/SoundToggle";
+import ScrollHint from "@/components/ui/ScrollHint";
 
 export default function Home() {
   const [entered, setEntered] = useState(false);
 
   return (
     <main>
-      <Hero entered={entered} onEnter={() => setEntered(true)} />
+          <Hero
+          entered={entered}
+          onEnter={() => {
+            window.scrollTo(0, 0);
+          setEntered(true);
+          }}
+      />
       {entered && <SoundToggle />}
+      {entered && <ScrollHint />}
       <Story />
       <Animals />
       <ArkScene />

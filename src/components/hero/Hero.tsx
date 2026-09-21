@@ -55,6 +55,13 @@ export default function Hero({ onEnter, entered }: HeroProps) {
             </p>
 
             <div className="mt-4">
+                <motion.p
+              className="font-display text-base sm:text-lg"
+              animate={{ opacity: [0.5, 1, 0.5], y: [0, -4, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              Toque na arca para embarcar 👆
+            </motion.p>
               <Ark onEnter={onEnter} />
             </div>
           </div>
