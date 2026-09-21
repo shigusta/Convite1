@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  /* Céu */
+  --color-sky-light: #cfeaf7;
+  --color-sky-mid: #a8d8ef;
+  --color-sky-deep: #6fb3d9;
+
+  /* Água */
+  --color-water-light: #a3d9d3;
+  --color-water-mid: #5fb8b0;
+  --color-water-deep: #2e7d78;
+
+  /* Natureza */
+  --color-leaf-light: #b8dba0;
+  --color-leaf-mid: #7fb069;
+  --color-leaf-deep: #4a7c3f;
+  --color-earth: #c9a876;
+  --color-wood: #8b6244;
+
+  /* Sol / luz quente */
+  --color-sun: #ffd97d;
+  --color-sun-glow: #ffe9b0;
+
+  /* Arco-íris (tons suaves, não neon) */
+  --color-rainbow-red: #f4a3a0;
+  --color-rainbow-orange: #f7c08a;
+  --color-rainbow-yellow: #f5e0a3;
+  --color-rainbow-green: #a8d5b5;
+  --color-rainbow-blue: #a3c9e8;
+  --color-rainbow-purple: #c9b3e0;
+
+  /* Neutros / texto */
+  --color-cream: #fdf6ec;
+  --color-charcoal: #3a3a3a;
+
+  /* Fontes */
+  --font-display: var(--font-display), sans-serif;
+  --font-body: var(--font-body), sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+@keyframes rainfall {
+  from {
+    transform: translateY(-10%);
+  }
+  to {
+    transform: translateY(110vh);
+  }
+}
+
+@keyframes lightning {
+  0%, 28%, 35%, 70%, 74%, 100% { opacity: 0; }
+  29% { opacity: 0.5; }
+  30% { opacity: 0.1; }
+  31.5% { opacity: 0.4; }
+  71% { opacity: 0.35; }
+}
