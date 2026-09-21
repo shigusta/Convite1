@@ -15,7 +15,7 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://oliver.isoprocell.com"),
+  metadataBase: new URL("https://oliver.isoprocell.com.br"),
   title: "Oliver | 1º Aniversário",
   description: "Você está convidado para embarcar nessa aventura!",
   openGraph: {
