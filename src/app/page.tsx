@@ -12,6 +12,7 @@ import Rsvp from "@/components/rsvp/Rsvp";
 import Farewell from "@/components/footer/Farewell";
 import SoundToggle from "@/components/ui/SoundToggle";
 import ScrollHint from "@/components/ui/ScrollHint";
+import RsvpButton from "@/components/ui/RsvpButton";
 
 export default function Home() {
   const [entered, setEntered] = useState(false);
@@ -27,6 +28,7 @@ export default function Home() {
       />
       {entered && <SoundToggle />}
       {entered && <ScrollHint />}
+      {entered && <RsvpButton />}
       <Story />
       <Animals />
       <ArkScene />
