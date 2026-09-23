@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { isSoundOn, onSoundChange } from "@/lib/sound";
 
 const RAINDROPS = Array.from({ length: 40 }, (_, i) => ({
   left: (i * 37) % 100,
@@ -42,6 +43,88 @@ export default function WeatherTransition() {
   // Sol: aparece por último
   const sunOpacity = useTransform(scrollYProgress, [0.75, 1], [0, 1]);
   const sunScale = useTransform(scrollYProgress, [0.75, 1], [0.6, 1]);
+
+  // --- Som de chuva e som de paz, sincronizados ao scroll ---
+  const rainAudioRef = useRef<HTMLAudioElement | null>(null);
+  const peaceAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  function getRainAudio() {
+    if (!rainAudioRef.current) {
+      rainAudioRef.current = new Audio("/sounds/chuva.mp3");
+      rainAudioRef.current.loop = true;
+    }
+    return rainAudioRef.current;
+  }
+  function getPeaceAudio() {
+    if (!peaceAudioRef.current) {
+      peaceAudioRef.current = new Audio("/sounds/paz.mp3");
+      peaceAudioRef.current.loop = true;
+    }
+    return peaceAudioRef.current;
+  }
+
+  function syncSounds(progress: number) {
+    const rain = getRainAudio();
+    const peace = getPeaceAudio();
+
+    if (!isSoundOn()) {
+      rain.pause();
+      peace.pause();
+      return;
+    }
+
+    if (progress > 0.05 && progress < 0.62) {
+      rain.volume = Math.min(1, rainOpacity.get());
+      if (rain.paused) rain.play().catch(() => {});
+    } else {
+      rain.pause();
+    }
+
+    if (progress >= 0.55) {
+      peace.volume = Math.min(1, Math.max(rainbowOpacity.get(), sunOpacity.get()));
+      if (peace.paused) peace.play().catch(() => {});
+    } else {
+      peace.pause();
+    }
+  }
+
+  useMotionValueEvent(scrollYProgress, "change", syncSounds);
+
+    useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          syncSounds(scrollYProgress.get());
+        } else {
+          rainAudioRef.current?.pause();
+          peaceAudioRef.current?.pause();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSoundChange((on) => {
+      if (!on) {
+        rainAudioRef.current?.pause();
+        peaceAudioRef.current?.pause();
+      } else {
+        syncSounds(scrollYProgress.get());
+      }
+    });
+    return () => {
+      unsubscribe();
+      rainAudioRef.current?.pause();
+      peaceAudioRef.current?.pause();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div ref={containerRef} className="relative h-[250vh] w-full">
